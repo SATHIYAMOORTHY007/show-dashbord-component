@@ -8,7 +8,8 @@ import Login from './Login'
 import Portal from './Portal'
 import CreateUser from './CreateUser'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-
+import UserView from './UserView'
+import UserEdit from './UserEdit'
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,8 @@ function App() {
           <Route path="dashbord" element={<Dashboard />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="createuser" element={<CreateUser />} />
+          <Route path="user-view/:id" element={<UserView />} />
+          <Route path="useredit/:id" element={<UserEdit />} />
         </Route>
       </Routes>
     </BrowserRouter>

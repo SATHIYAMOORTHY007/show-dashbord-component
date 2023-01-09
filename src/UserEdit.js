@@ -1,11 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Formik, useFormik, onChange } from 'formik'
 import axios from 'axios'
-import { isDisabled } from '@testing-library/user-event/dist/utils'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-function CreateUser() {
+import UserList from './UserList'
+function UserEdit() {
   const [isLoading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const params = useParams()
+
+  useEffect(() => {
+    getUserDate()
+  }, [])
+
+  let getUserDate = async () => {
+    try {
+      const user = await axios.get(
+        `https://6397045686d04c76338811e9.mockapi.io/users/${params.id}`,
+      )
+      myformik.setValues(user.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const myformik = useFormik({
     initialValues: {
       name: '',
@@ -45,19 +64,21 @@ function CreateUser() {
     onSubmit: async (values) => {
       setLoading(true)
       try {
-        const user = await axios.post(
-          'https://6397045686d04c76338811e9.mockapi.io/users',
+        const user = await axios.put(
+          `https://6397045686d04c76338811e9.mockapi.io/users/${params.id}`,
           values,
         )
-        navigate(`portal/user-list`)
+        setLoading(false)
+        navigate(`/portal/user-list`)
       } catch (error) {
         console.log(error)
-        setLoading(false)
       }
     },
   })
+
   return (
     <div className="container">
+      <h1>{params.id}</h1>
       <form onSubmit={myformik.handleSubmit}>
         <div className="row">
           <div className="col-lg-6">
@@ -143,7 +164,7 @@ function CreateUser() {
             <input
               type="submit"
               disabled={isLoading}
-              value={isLoading ? 'Loading...' : 'Create'}
+              value={isLoading ? 'Update' : 'Update...'}
               className="btn mt-1 btn-primary"
             />
           </div>
@@ -153,4 +174,4 @@ function CreateUser() {
   )
 }
 
-export default CreateUser
+export default UserEdit
